@@ -2,13 +2,28 @@ package com.android.carepet.data.response
 
 import com.google.gson.annotations.SerializedName
 
-data class DiseasetResponse(
+data class DiseaseResponse(
 
 	@field:SerializedName("item")
 	val item: List<ItemItem>,
 
+	@field:SerializedName("id")
+	val id: String,
+
 	@field:SerializedName("name")
-	val name: String
+	val name: String,
+
+	@field:SerializedName("category")
+	val category: String,
+
+	@field:SerializedName("description")
+	val description: String,
+
+	@field:SerializedName("symptoms")
+	val symptoms: String,
+
+	@field:SerializedName("treatment")
+	val treatment: String
 )
 
 

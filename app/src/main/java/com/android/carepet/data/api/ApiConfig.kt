@@ -1,9 +1,7 @@
 package com.android.carepet.data.api
 
 import android.content.Context
-import com.android.carepet.data.di.Injection
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.runBlocking
+import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -19,12 +17,12 @@ object ApiConfig {
 
         val authInterceptor = Interceptor { chain ->
             val requestBuilder = chain.request().newBuilder()
-            val userRepository = Injection.provideRepository(context)
-            runBlocking {
-                val user = userRepository.getSession().firstOrNull()
-                user?.token?.let { token ->
-                    requestBuilder.addHeader("Authorization", "Bearer $token")
-                }
+            val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+            val token = sharedPreferences.getString("auth_token", null)
+            if (!token.isNullOrEmpty()) {
+                requestBuilder.addHeader("Authorization", "Bearer $token")
+            } else {
+                Log.e("ApiConfig", "Token is null or empty")
             }
             chain.proceed(requestBuilder.build())
         }

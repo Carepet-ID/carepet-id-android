@@ -1,5 +1,6 @@
 package com.android.carepet.view.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.android.carepet.data.pref.UserModel
 import com.android.carepet.data.pref.UserRepository
 import com.android.carepet.data.response.Result
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val repository: UserRepository) : ViewModel() {
@@ -21,28 +23,24 @@ class LoginViewModel(private val repository: UserRepository) : ViewModel() {
     private val _passwordError = MutableLiveData<String?>()
     val passwordError: LiveData<String?> = _passwordError
 
+    private val _sessionSaved = MutableLiveData<Boolean>()
+    val sessionSaved: LiveData<Boolean> = _sessionSaved
+
     fun login(username: String, password: String) {
         if (validateInput(username, password)) {
             viewModelScope.launch {
                 _loginResult.value = Result.Loading
                 try {
                     val response = repository.loginUser(username, password)
-                    val role = response.request?.body?.formdata?.find { it.key == "role" }?.value ?: ""
-                    val photo = response.request?.body?.formdata?.find { it.key == "photo" }?.src ?: ""
-                    val token = response.request?.body?.formdata?.find { it.key == "token" }?.value
+                    // Token is now handled within the UserRepository and saved in UserModel
 
-                    val user = UserModel(
-                        username = username,
-                        password = password,
-                        role = role,
-                        photo = photo,
-                        token = token,
-                        isLogin = true
-                    )
-                    repository.saveSession(user)
+                    val user = repository.getSession().first() // Get the saved session
                     _loginResult.value = Result.Success(user)
+                    _sessionSaved.value = true
+
+                    Log.d("LoginViewModel", "Token after login: ${user.token}")
                 } catch (e: Exception) {
-                    _loginResult.value = Result.Error(e.message)
+                    _loginResult.value = Result.Error(e.message ?: "An unknown error occurred")
                 }
             }
         }
@@ -84,6 +82,11 @@ class LoginViewModel(private val repository: UserRepository) : ViewModel() {
             _passwordError.value = null
         }
         return isValid
+    }
+
+    fun getToken(): String {
+        val session = getSession().value
+        return session?.token ?: ""
     }
 
     fun getSession(): LiveData<UserModel> {

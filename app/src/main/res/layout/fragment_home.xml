@@ -30,12 +30,12 @@
 
             <ImageView
                 android:id="@+id/logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="40dp"
+                android:layout_width="200dp"
+                android:layout_height="150dp"
+                android:layout_marginRight="25dp"
                 android:layout_marginTop="30dp"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_launcher_foreground" />
+                android:src="@drawable/anjing_banyak" />
 
             <TextView
                 android:id="@+id/subHeaderText"
@@ -48,6 +48,16 @@
                 android:fontFamily="@font/plusjakartasans_variablefont_wght"
                 android:textStyle="bold"
                 android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/scanHeaderText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_marginTop="5dp"
+                android:textSize="13sp"
+                android:text="scans to identify dog skin diseases"
+                android:layout_below="@+id/subHeaderText"/>
 
             <ImageView
                 android:id="@+id/headerImage"
@@ -101,7 +111,7 @@
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:src="@drawable/ic_launcher_background" />
+                    android:src="@drawable/diseases" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -123,7 +133,7 @@
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:src="@drawable/ic_launcher_background" />
+                    android:src="@drawable/medicine" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -176,7 +186,7 @@
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:src="@drawable/ic_launcher_background" />
+                    android:src="@drawable/bailey" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -205,7 +215,7 @@
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:src="@drawable/ic_launcher_background" />
+                    android:src="@drawable/charlie" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -267,7 +277,7 @@
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:src="@drawable/ic_launcher_background" />
+                android:src="@drawable/anjing_dua" />
 
             <LinearLayout
                 android:layout_width="0dp"

@@ -12,7 +12,7 @@ interface ApiService {
     @POST("login")
     suspend fun login(
         @Part("username") username: RequestBody,
-        @Part("password") password: RequestBody
+        @Part("password") password: RequestBody,
     ): LoginResponse
 
     @Multipart
@@ -31,16 +31,23 @@ interface ApiService {
         @Part("role") role: RequestBody
     ): SignupResponse
 
-    @Multipart
-    @POST("upload")
-    suspend fun uploadImage(
-        @Part imageFile: MultipartBody.Part,
-        @Part("description") description: RequestBody
-    ): FileUploadResponse
-
     @POST("logout")
     suspend fun logout(@Header("Authorization") token: String?): LogoutResponse
 
-    @GET("diseases")
-    suspend fun getDiseases(): DiseasetResponse
+    @Multipart
+    @POST("predict")
+    suspend fun predict(
+        @Part imageFile: MultipartBody.Part,
+        @Header("Authorization") token: String
+    ): FileUploadResponse
+
+    @Multipart
+    @POST("disease")
+    suspend fun detectDisease(
+        @Part imageFile: MultipartBody.Part,
+        @Header("Authorization") token: String
+    ): DiseaseResponse
+
+    @GET("disease/detail/{id}")
+    suspend fun getDiseaseById(@Path("id") id: String): DiseaseResponse
 }

@@ -21,7 +21,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
                 password = preferences[PASSWORD_KEY] ?: "",
                 role = preferences[ROLE_KEY] ?: "",
                 photo = preferences[PHOTO_KEY] ?: "",
-                token = preferences[TOKEN_KEY],
+                preferences[TOKEN_KEY] ?: "",
                 isLogin = preferences[IS_LOGIN_KEY] ?: false
             )
         }

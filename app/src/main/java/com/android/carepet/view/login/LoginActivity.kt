@@ -54,22 +54,23 @@ class LoginActivity : AppCompatActivity() {
         btnLogin.setOnClickListener {
             val username = etUsername.text.toString()
             val password = etPassword.text.toString()
+            val token = loginViewModel.getToken()
             loginViewModel.login(username, password)
         }
 
         loginViewModel.loginResult.observe(this, Observer { result ->
             when (result) {
                 is Result.Loading -> {
-                    progressBar.visibility = android.view.View.VISIBLE
+                    progressBar.visibility = View.VISIBLE
                 }
                 is Result.Success -> {
-                    progressBar.visibility = android.view.View.GONE
+                    progressBar.visibility = View.GONE
                     val intent = Intent(this, DashboardActivity::class.java)
                     startActivity(intent)
                     finish()
                 }
                 is Result.Error -> {
-                    progressBar.visibility = android.view.View.GONE
+                    progressBar.visibility = View.GONE
                     Log.e("LoginActivity", "Login failed: ${result.error}")
                     Toast.makeText(this, "Login failed: ${result.error}", Toast.LENGTH_SHORT).show()
                 }

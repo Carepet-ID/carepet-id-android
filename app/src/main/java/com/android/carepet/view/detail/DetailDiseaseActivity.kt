@@ -20,25 +20,26 @@ import androidx.lifecycle.lifecycleScope
 import com.android.carepet.R
 import com.android.carepet.dashboard.DashboardActivity
 import com.android.carepet.data.api.ApiConfig
-import com.android.carepet.data.response.FileUploadResponse
+import com.android.carepet.data.pref.UserPreference
+import com.android.carepet.data.pref.UserRepository
+import com.android.carepet.data.response.DiseaseResponse
 import com.bumptech.glide.Glide
-import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.io.OutputStream
+import java.io.*
 
 class DetailDiseaseActivity : AppCompatActivity() {
     private var currentImageUri: Uri? = null
     private lateinit var progressBar: ProgressBar
     private lateinit var resultTextView: TextView
+    private lateinit var diseaseNameTextView: TextView
+    private lateinit var accuracyTextView: TextView
+    private lateinit var diseaseIdTextView: TextView
+    private lateinit var resultImageView: ImageView
+    private lateinit var userRepository: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +75,16 @@ class DetailDiseaseActivity : AppCompatActivity() {
 
         progressBar = findViewById(R.id.progressBar)
         resultTextView = findViewById(R.id.resultTextView)
+        diseaseNameTextView = findViewById(R.id.diseaseNameTextView)
+        accuracyTextView = findViewById(R.id.accuracyTextView)
+        diseaseIdTextView = findViewById(R.id.diseaseIdTextView)
+        resultImageView = findViewById(R.id.resultImageView)
+
+        userRepository = UserRepository.getInstance(
+            ApiConfig.getApiService(this),
+            UserPreference.getInstance(this).getDataStore(),
+            getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        )
 
         uploadImage()
     }
@@ -91,31 +102,80 @@ class DetailDiseaseActivity : AppCompatActivity() {
                 requestImageFile
             )
 
-            val descriptionText = "Your description here"
-            val description = descriptionText.toRequestBody("text/plain".toMediaType())
+            Log.d("DetailDiseaseActivity", "multipartBody: ${multipartBody.body.contentType()}, ${multipartBody.body.contentLength()} bytes")
 
             lifecycleScope.launch {
+                val token = userRepository.getTokenFromPreferences()
+
+                Log.d("DetailDiseaseActivity", "Token: $token")
+
+                if (token.isNullOrEmpty()) {
+                    showToast("Token not found. Please login again.")
+                    showLoading(false)
+                    return@launch
+                }
+
                 try {
                     val apiService = ApiConfig.getApiService(this@DetailDiseaseActivity)
-                    val successResponse = apiService.uploadImage(multipartBody, description)
-                    with(successResponse.data) {
-                        resultTextView.text = if (isAboveThreshold == true) {
-                            showToast(successResponse.message.toString())
-                            String.format("%s with %.2f%%", result, confidenceScore)
-                        } else {
-                            showToast("Model is predicted successfully but under threshold.")
-                            String.format("Please use the correct picture because the confidence score is %.2f%%", confidenceScore)
-                        }
+                    val response = apiService.predict(
+                        multipartBody,
+                        "Bearer $token"
+                    )
+
+                    if (response.status == "success" && response.predict != null) {
+                        val predict = response.predict
+                        diseaseNameTextView.text = predict.name
+                        accuracyTextView.text = "Accuracy: ${predict.accuracy}%"
+                        diseaseIdTextView.text = "Disease ID: ${predict.diseaseId}"
+                        Glide.with(this@DetailDiseaseActivity)
+                            .load(predict.photo)
+                            .into(resultImageView)
+                        fetchDiseaseDetails(predict.diseaseId)
+                    } else {
+                        showToast("Prediction failed: ${response.message}")
+                        showLoading(false)
                     }
-                    showLoading(false)
                 } catch (e: HttpException) {
-                    val errorBody = e.response()?.errorBody()?.string()
-                    val errorResponse = Gson().fromJson(errorBody, FileUploadResponse::class.java)
-                    showToast(errorResponse.message.toString())
+                    Log.e("DetailDiseaseActivity", "HttpException: ${e.message()}")
+                    showToast("Error uploading image: ${e.message()}")
+                    showLoading(false)
+                } catch (e: Exception) {
+                    Log.e("DetailDiseaseActivity", "Exception: ${e.message}")
+                    showToast("Error uploading image: ${e.message}")
                     showLoading(false)
                 }
             }
         } ?: showToast(getString(R.string.empty_image_warning))
+    }
+
+    private fun fetchDiseaseDetails(diseaseId: String) {
+        lifecycleScope.launch {
+            try {
+                val apiService = ApiConfig.getApiService(this@DetailDiseaseActivity)
+                val response = apiService.getDiseaseById(diseaseId)
+
+                displayDiseaseDetails(response)
+            } catch (e: HttpException) {
+                Log.e("DetailDiseaseActivity", "HttpException: ${e.message()}")
+                showToast("Error fetching disease details: ${e.message()}")
+            } catch (e: Exception) {
+                Log.e("DetailDiseaseActivity", "Exception: ${e.message}")
+                showToast("Error fetching disease details: ${e.message}")
+            } finally {
+                showLoading(false)
+            }
+        }
+    }
+
+    private fun displayDiseaseDetails(disease: DiseaseResponse) {
+        val details = """
+            Name: ${disease.name}
+            Category: ${disease.category}
+            Description: ${disease.description}
+            Symptoms: ${disease.symptoms}
+            Treatment: ${disease.treatment}
+        """.trimIndent()
+        resultTextView.text = details
     }
 
     private fun uriToFile(selectedImageUri: Uri, context: Context): File {
