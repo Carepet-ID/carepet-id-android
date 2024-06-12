@@ -192,7 +192,7 @@ class DetailDiseaseActivity : AppCompatActivity() {
     }
 
     private fun File.reduceFileImage(): File {
-        val MAXIMAL_SIZE = 1000000
+        val maximalSIZE = 1000000
         val bitmap = BitmapFactory.decodeFile(this.path)
         var compressQuality = 100
         var streamLength: Int
@@ -202,7 +202,7 @@ class DetailDiseaseActivity : AppCompatActivity() {
             val bmpPicByteArray = bmpStream.toByteArray()
             streamLength = bmpPicByteArray.size
             compressQuality -= 5
-        } while (streamLength > MAXIMAL_SIZE)
+        } while (streamLength > maximalSIZE)
         bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(this))
         return this
     }
