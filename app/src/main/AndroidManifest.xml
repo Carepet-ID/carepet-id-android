@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -37,9 +36,6 @@
             android:name=".view.detail.DetailDiseaseActivity"
             android:exported="false" />
         <activity
-            android:name=".dashboard.bookmark.BookmarkActivity"
-            android:exported="false" />
-        <activity
             android:name=".dashboard.about.AboutActivity"
             android:exported="false" />
         <activity
@@ -56,6 +52,15 @@
             android:exported="false" />
         <activity
             android:name=".view.login.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".dashboard.fragment.ArticlesFragment"
+            android:exported="false" />
+        <activity
+            android:name=".view.article.ArticleDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".dashboard.bookmark.BookmarkActivity"
             android:exported="false" />
         <activity
             android:name=".view.main.MainActivity"

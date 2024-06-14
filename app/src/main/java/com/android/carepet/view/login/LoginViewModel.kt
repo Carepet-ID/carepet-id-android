@@ -8,6 +8,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.android.carepet.data.pref.UserModel
 import com.android.carepet.data.pref.UserRepository
+import com.android.carepet.data.response.ProfileDetailResponse
 import com.android.carepet.data.response.Result
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -25,6 +26,9 @@ class LoginViewModel(private val repository: UserRepository) : ViewModel() {
 
     private val _sessionSaved = MutableLiveData<Boolean>()
     val sessionSaved: LiveData<Boolean> = _sessionSaved
+
+    private val _profileDetail = MutableLiveData<ProfileDetailResponse>()
+    val profileDetail: LiveData<ProfileDetailResponse> = _profileDetail
 
     fun login(username: String, password: String) {
         if (validateInput(username, password)) {
@@ -87,6 +91,17 @@ class LoginViewModel(private val repository: UserRepository) : ViewModel() {
     fun getToken(): String {
         val session = getSession().value
         return session?.token ?: ""
+    }
+
+    fun fetchProfileDetail() {
+        viewModelScope.launch {
+            try {
+                val profile = repository.getProfileDetail()
+                _profileDetail.value = profile
+            } catch (e: Exception) {
+                Log.e("LoginViewModel", "Error fetching profile detail: ${e.message}")
+            }
+        }
     }
 
     fun getSession(): LiveData<UserModel> {

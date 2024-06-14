@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("kotlin-kapt")
 }
 
 android {
@@ -39,6 +40,7 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        dataBinding = true
     }
 }
 
@@ -63,7 +65,7 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     implementation("androidx.datastore:datastore-preferences:1.1.1")
-    implementation ("androidx.fragment:fragment-ktx:1.3.6")
+    implementation ("androidx.fragment:fragment-ktx:1.7.1")
 
     //Depedencies for Intent Camera and Intent Galery
     implementation("androidx.camera:camera-camera2:$cameraxVersion")
@@ -76,5 +78,8 @@ dependencies {
 
     //TensorFlow
     implementation("org.tensorflow:tensorflow-lite-task-vision:0.4.4")
+
+    //Paging
+    implementation("androidx.paging:paging-runtime:3.3.0")
 
 }

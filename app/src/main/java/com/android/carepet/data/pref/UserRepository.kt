@@ -118,6 +118,14 @@ class UserRepository private constructor(
         }
     }
 
+    suspend fun getProfileDetail(): ProfileDetailResponse {
+        val token = dataStore.data.map { it[TOKEN_KEY] }.firstOrNull() ?: ""
+        if (token.isBlank()) {
+            throw Exception("Token is null or empty")
+        }
+        return apiService.getProfileDetail("Bearer $token")
+    }
+
     suspend fun logout() {
         val token = dataStore.data.map { it[TOKEN_KEY] }.firstOrNull() ?: ""
 

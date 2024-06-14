@@ -50,4 +50,16 @@ interface ApiService {
 
     @GET("disease/detail/{id}")
     suspend fun getDiseaseById(@Path("id") id: String): DiseaseResponse
+
+    @GET("profile")
+    suspend fun getProfileDetail(@Header("Authorization") token: String): ProfileDetailResponse
+
+    @GET("article")
+    suspend fun getAllArticles(@Header("Authorization") token: String): List<Article>
+
+    @GET("article/{category}")
+    suspend fun getArticleByCategory(@Header("Authorization") token: String, @Path("category") category: String): List<Article>
+
+    @GET("article/detail/{id}")
+    suspend fun getArticleById(@Header("Authorization") token: String, @Path("id") id: String): Article
 }
