@@ -44,15 +44,17 @@
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/plus_circle_outline"
+            android:src="@drawable/dog_scan"
             android:layout_centerHorizontal="true"
             android:backgroundTint="@color/orange"
+            android:contentDescription="@string/keep_your_dog"
             android:elevation="6dp"
             app:maxImageSize="40dp"
             app:elevation="100dp"
             app:pressedTranslationZ="12dp"
             android:layout_alignTop="@id/bottomNavigationView"
-            android:layout_marginTop="-12dp"/>
+            android:layout_marginTop="-12dp"
+            app:tint="@null"/>
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
