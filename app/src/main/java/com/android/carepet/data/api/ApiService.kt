@@ -41,12 +41,8 @@ interface ApiService {
         @Header("Authorization") token: String
     ): FileUploadResponse
 
-    @Multipart
-    @POST("disease")
-    suspend fun detectDisease(
-        @Part imageFile: MultipartBody.Part,
-        @Header("Authorization") token: String
-    ): DiseaseResponse
+    @GET("disease")
+    suspend fun getAllDiseases(@Header("Authorization") token: String): List<DiseaseResponse>
 
     @GET("disease/detail/{id}")
     suspend fun getDiseaseById(@Path("id") id: String): DiseaseResponse
@@ -62,4 +58,13 @@ interface ApiService {
 
     @GET("article/detail/{id}")
     suspend fun getArticleById(@Header("Authorization") token: String, @Path("id") id: String): Article
+
+    @GET("product")
+    suspend fun getAllProducts(@Header("Authorization") token: String): List<Product>
+
+    @GET("product/{category}")
+    suspend fun getProductsByCategory(
+        @Header("Authorization") token: String,
+        @Path("category") category: String
+    ): List<Product>
 }

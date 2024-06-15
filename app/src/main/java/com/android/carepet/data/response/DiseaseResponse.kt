@@ -23,7 +23,10 @@ data class DiseaseResponse(
 	val symptoms: String,
 
 	@field:SerializedName("treatment")
-	val treatment: String
+	val treatment: String,
+
+	@field:SerializedName("photo")
+	val photo: String
 )
 
 
@@ -36,7 +39,9 @@ data class ItemItem(
 	val response: List<Any>,
 
 	@field:SerializedName("name")
-	val name: String
+	val name: String,
+
+	@field:SerializedName("description") val description: String
 )
 
 
