@@ -30,7 +30,7 @@ class ArticleDetailActivity : AppCompatActivity() {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.lavender));
+            window.statusBarColor = resources.getColor(R.color.orange)
         }
 
         val articleTitle = intent.getStringExtra("article_title")

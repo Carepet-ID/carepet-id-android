@@ -1,6 +1,7 @@
 package com.android.carepet.view.login
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -50,6 +51,10 @@ class LoginActivity : AppCompatActivity() {
         tvPrompt = findViewById(R.id.tvPrompt)
         progressBar = findViewById(R.id.progressBar)
         progressBar.visibility = View.GONE
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = resources.getColor(R.color.orange)
+        }
 
         btnLogin.setOnClickListener {
             val username = etUsername.text.toString()

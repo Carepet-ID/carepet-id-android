@@ -1,5 +1,6 @@
 package com.android.carepet.view.disease
 
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -8,8 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.carepet.R
 import com.android.carepet.data.api.ApiConfig
-import com.android.carepet.data.pref.UserPreference
-import kotlinx.coroutines.flow.firstOrNull
+import androidx.appcompat.widget.Toolbar
 import kotlinx.coroutines.launch
 
 class DiseaseActivity : AppCompatActivity() {
@@ -20,10 +20,22 @@ class DiseaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_disease)
 
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
+
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         diseaseAdapter = DiseaseAdapter()
         recyclerView.adapter = diseaseAdapter
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = resources.getColor(R.color.orange)
+        }
 
         fetchDiseases()
     }

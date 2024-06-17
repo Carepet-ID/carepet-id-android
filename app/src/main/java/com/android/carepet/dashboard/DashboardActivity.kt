@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -32,7 +33,6 @@ import com.android.carepet.data.di.Injection
 import com.android.carepet.data.pref.UserRepository
 import com.android.carepet.view.detail.DetailDiseaseActivity
 import com.android.carepet.view.login.LoginActivity
-import com.android.carepet.view.settings.SettingsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -74,6 +74,10 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = resources.getColor(R.color.orange)
+        }
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener {
@@ -131,10 +135,6 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             R.id.nav_home -> {
                 replaceFragment(HomeFragment())
                 findViewById<BottomNavigationView>(R.id.bottomNavigationView).selectedItemId = R.id.home
-            }
-            R.id.nav_settings -> {
-                val intent = Intent(this, SettingsActivity::class.java)
-                startActivity(intent)
             }
             R.id.nav_bookmark -> {
                 val intent = Intent(this, BookmarkActivity::class.java)

@@ -1,6 +1,7 @@
 package com.android.carepet.view.register
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -45,6 +46,10 @@ class RegisterActivity : AppCompatActivity() {
         btnRegister = findViewById(R.id.btnRegister)
         progressBar = findViewById(R.id.progressBar)
         progressBar.visibility = View.GONE
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = resources.getColor(R.color.orange)
+        }
 
         btnRegister.setOnClickListener {
             val username = etUsername.text.toString()

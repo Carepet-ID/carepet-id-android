@@ -1,32 +1,40 @@
 package com.android.carepet.dashboard.fragment
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.android.carepet.R
+import com.android.carepet.data.api.ApiConfig
+import com.android.carepet.data.api.ApiService
+import com.android.carepet.data.pref.UserPreference
+import com.android.carepet.data.response.DogResponse
+import com.android.carepet.view.dogs.AddDogsActivity
+import com.android.carepet.view.dogs.DogsAdapter
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [DogsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class DogsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var dogsAdapter: DogsAdapter
+    private lateinit var apiService: ApiService
+    private lateinit var buttonAddDog: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
         }
     }
 
@@ -34,27 +42,112 @@ class DogsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dogs, container, false)
+        val view = inflater.inflate(R.layout.fragment_dogs, container, false)
+        recyclerView = view.findViewById(R.id.recyclerViewDogs)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        dogsAdapter = DogsAdapter { dog ->
+            showDeleteConfirmationDialog(dog)
+        }
+        recyclerView.adapter = dogsAdapter
+
+        buttonAddDog = view.findViewById(R.id.buttonAddDog)
+        buttonAddDog.setOnClickListener {
+            val intent = Intent(requireContext(), AddDogsActivity::class.java)
+            startActivity(intent)
+        }
+
+        apiService = ApiConfig.getApiService(requireContext())
+
+        fetchDogs()
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DogsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DogsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun fetchDogs() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val token = getAuthToken()
+                if (token.isNotEmpty()) {
+                    val dogsList = apiService.getAllDogs(token)
+                    withContext(Dispatchers.Main) {
+                        dogsAdapter.submitList(dogsList)
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(context, "Token is null or empty", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+
+    private fun showDeleteConfirmationDialog(dog: DogResponse) {
+        AlertDialog.Builder(requireContext())
+            .setMessage("Are you sure?")
+            .setPositiveButton("Confirm") { dialog, _ ->
+                deleteDog(dog)
+                dialog.dismiss()
+                navigateToHomeFragment()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                Toast.makeText(context, "Dog Deletion Cancelled", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+            .create()
+            .show()
+    }
+
+    private fun deleteDog(dog: DogResponse) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val token = getAuthToken()
+                if (token.isNotEmpty()) {
+                    val response = apiService.deleteDog(token, dog.id)
+                    withContext(Dispatchers.Main) {
+                        if (response.success) {
+                            removeDogFromList(dog)
+                            navigateToHomeFragment()
+                        } else {
+                            //Do Nothing
+                        }
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(context, "Token is null or empty", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun removeDogFromList(dog: DogResponse) {
+        val updatedList = dogsAdapter.getDogs().toMutableList()
+        updatedList.remove(dog)
+        dogsAdapter.submitList(updatedList)
+    }
+
+    private suspend fun getAuthToken(): String {
+        val userPreference = UserPreference.getInstance(requireContext())
+        val user = userPreference.getSession().firstOrNull()
+        return user?.token ?: ""
+    }
+
+    private fun navigateToHomeFragment() {
+        val activity = requireActivity()
+        val fragmentTransaction = activity.supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frame_layout, HomeFragment())
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
+
+        val bottomNavigationView = activity.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView.selectedItemId = R.id.home
     }
 }

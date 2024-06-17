@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".view.dogs.AddDogsActivity">
+
+    <EditText
+        android:id="@+id/editTextDogName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Dog Name"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/editTextDogAge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Age"
+        android:inputType="number"/>
+
+    <EditText
+        android:id="@+id/editTextDogBreed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Breed"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/editTextDogSkinColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Skin Color"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/editTextDogGender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Gender"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/editTextDogBirthday"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Birthday (yyyy-mm-dd)"
+        android:inputType="date"/>
+
+    <EditText
+        android:id="@+id/editTextDogAbout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="About"
+        android:inputType="text"/>
+
+    <ImageView
+        android:id="@+id/imageViewSelectedPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="Selected Photo"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_image_placeholder" />
+
+    <Button
+        android:id="@+id/buttonSelectPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Photo"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/buttonAddDog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Dog"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.android.carepet.R
 import com.android.carepet.data.response.DiseaseResponse
+import com.android.carepet.data.utils.StringUtils
 import com.android.carepet.databinding.ItemDiseaseBinding
 import com.bumptech.glide.Glide
 
@@ -31,6 +32,8 @@ class DiseaseAdapter : RecyclerView.Adapter<DiseaseAdapter.DiseaseViewHolder>() 
         fun bind(disease: DiseaseResponse) {
             binding.disease = disease
             binding.executePendingBindings()
+
+            binding.diseaseDescription.text = StringUtils.truncateDescription(disease.description)
 
             Glide.with(binding.imageView.context)
                 .load(disease.photo)

@@ -1,9 +1,11 @@
 package com.android.carepet.view.main
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.android.carepet.R
 import com.android.carepet.dashboard.DashboardActivity
 import com.android.carepet.databinding.ActivityMainBinding
 import com.android.carepet.view.ViewModelFactory
@@ -28,6 +30,10 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = resources.getColor(R.color.orange)
         }
 
         setupAction()

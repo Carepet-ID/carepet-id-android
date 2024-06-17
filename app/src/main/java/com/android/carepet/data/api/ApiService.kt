@@ -4,6 +4,7 @@ import com.android.carepet.data.response.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiService {
@@ -67,4 +68,41 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("category") category: String
     ): List<Product>
+
+    @GET("dog")
+    suspend fun getAllDogs(@Header("Authorization") token: String): List<DogResponse>
+
+    @GET("dog/{id}")
+    suspend fun getDogDetail(@Header("Authorization") token: String, @Path("id") id: String): DogResponse
+
+    @Multipart
+    @POST("dog")
+    suspend fun addNewDog(
+        @Header("Authorization") token: String,
+        @Part photo: MultipartBody.Part,
+        @Part("name") name: RequestBody,
+        @Part("about") about: RequestBody,
+        @Part("age") age: RequestBody,
+        @Part("birthday") birthday: RequestBody,
+        @Part("breed") breed: RequestBody,
+        @Part("skinColor") skinColor: RequestBody,
+        @Part("gender") gender: RequestBody
+    ): Response<DogResponse>
+
+    @Multipart
+    @PUT("dog/{id}")
+    suspend fun updateDogDetail(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+        @Part name: RequestBody,
+        @Part gender: RequestBody?,
+        @Part birthday: RequestBody?,
+        @Part photo: RequestBody?
+    ): DogResponse
+
+    @DELETE("dog/{id}")
+    suspend fun deleteDog(
+        @Header("Authorization") token: String,
+        @Path("id") id: String
+    ): DeleteDogResponse
 }
