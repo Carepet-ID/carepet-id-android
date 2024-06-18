@@ -33,6 +33,16 @@
         android:layout_marginEnd="10dp"/>
 
     <TextView
+        android:id="@+id/textViewDogGender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gender"
+        android:textSize="16sp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"/>
+
+    <TextView
         android:id="@+id/textViewDogBreed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,13 +72,37 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"/>
 
-    <Button
-        android:id="@+id/buttonDeleteDog"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Delete"
-        android:layout_gravity="end"
-        android:layout_margin="8dp"
-        android:backgroundTint="@color/orange"
-        android:textColor="@android:color/white"/>
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/buttonEditDog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit"
+            android:layout_margin="8dp"
+            android:backgroundTint="@color/lavender"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/buttonDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Detail"
+            android:layout_margin="8dp"
+            android:backgroundTint="@color/orange"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/buttonDeleteDog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:layout_margin="8dp"
+            android:backgroundTint="@color/red"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
 </LinearLayout>

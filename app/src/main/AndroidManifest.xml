@@ -22,6 +22,12 @@
         android:theme="@style/Theme.CarePet"
         tools:targetApi="31">
         <activity
+            android:name=".view.dogs.detail.DogsDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.dogs.EditDogsActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.disease.detail.GetDiseaseActivity"
             android:exported="false" />
         <activity

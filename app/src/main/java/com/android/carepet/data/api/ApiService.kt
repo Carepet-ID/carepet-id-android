@@ -94,11 +94,14 @@ interface ApiService {
     suspend fun updateDogDetail(
         @Header("Authorization") token: String,
         @Path("id") id: String,
-        @Part name: RequestBody,
-        @Part gender: RequestBody?,
-        @Part birthday: RequestBody?,
-        @Part photo: RequestBody?
-    ): DogResponse
+        @Part("name") name: RequestBody,
+        @Part("gender") gender: RequestBody?,
+        @Part("birthday") birthday: RequestBody?,
+        @Part("age") age: RequestBody?,
+        @Part("breed") breed: RequestBody?,
+        @Part("about") about: RequestBody?,
+        @Part photo: MultipartBody.Part?
+    ): Response<DogResponse>
 
     @DELETE("dog/{id}")
     suspend fun deleteDog(

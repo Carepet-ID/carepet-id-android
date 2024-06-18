@@ -1,5 +1,9 @@
 package com.android.carepet.data.response
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class DogResponse(
 	val id: String,
 	val photo: String,
@@ -10,7 +14,7 @@ data class DogResponse(
 	val breed: String,
 	val skinColor: String,
 	val gender: String
-)
+) : Parcelable
 
 data class DeleteDogResponse(
 	val success: Boolean,

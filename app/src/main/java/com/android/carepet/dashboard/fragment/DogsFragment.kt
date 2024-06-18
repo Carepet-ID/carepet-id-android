@@ -17,6 +17,8 @@ import com.android.carepet.data.pref.UserPreference
 import com.android.carepet.data.response.DogResponse
 import com.android.carepet.view.dogs.AddDogsActivity
 import com.android.carepet.view.dogs.DogsAdapter
+import com.android.carepet.view.dogs.EditDogsActivity
+import com.android.carepet.view.dogs.detail.DogsDetailActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
@@ -45,9 +47,11 @@ class DogsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_dogs, container, false)
         recyclerView = view.findViewById(R.id.recyclerViewDogs)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        dogsAdapter = DogsAdapter { dog ->
-            showDeleteConfirmationDialog(dog)
-        }
+        dogsAdapter = DogsAdapter(
+            { dog -> showDeleteConfirmationDialog(dog) },
+            { dog -> navigateToEditDog(dog) },
+            { dog -> navigateToDogDetail(dog) }
+        )
         recyclerView.adapter = dogsAdapter
 
         buttonAddDog = view.findViewById(R.id.buttonAddDog)
@@ -140,6 +144,18 @@ class DogsFragment : Fragment() {
         return user?.token ?: ""
     }
 
+    private fun navigateToEditDog(dog: DogResponse) {
+        val intent = Intent(requireContext(), EditDogsActivity::class.java)
+        intent.putExtra("dog", dog)
+        startActivityForResult(intent, EDIT_DOG_REQUEST_CODE)
+    }
+
+    private fun navigateToDogDetail(dog: DogResponse) {
+        val intent = Intent(requireContext(), DogsDetailActivity::class.java)
+        intent.putExtra("dog_id", dog.id)
+        startActivity(intent)
+    }
+
     private fun navigateToHomeFragment() {
         val activity = requireActivity()
         val fragmentTransaction = activity.supportFragmentManager.beginTransaction()
@@ -149,5 +165,14 @@ class DogsFragment : Fragment() {
 
         val bottomNavigationView = activity.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.selectedItemId = R.id.home
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fetchDogs()
+    }
+
+    companion object {
+        private const val EDIT_DOG_REQUEST_CODE = 1
     }
 }
