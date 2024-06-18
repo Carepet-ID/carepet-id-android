@@ -1,5 +1,6 @@
 package com.android.carepet.view.disease
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.carepet.R
 import com.android.carepet.data.api.ApiConfig
 import androidx.appcompat.widget.Toolbar
+import com.android.carepet.view.disease.detail.GetDiseaseActivity
 import kotlinx.coroutines.launch
 
 class DiseaseActivity : AppCompatActivity() {
@@ -30,7 +32,11 @@ class DiseaseActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        diseaseAdapter = DiseaseAdapter()
+        diseaseAdapter = DiseaseAdapter { diseaseId ->
+            val intent = Intent(this, GetDiseaseActivity::class.java)
+            intent.putExtra("disease_id", diseaseId)
+            startActivity(intent)
+        }
         recyclerView.adapter = diseaseAdapter
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
