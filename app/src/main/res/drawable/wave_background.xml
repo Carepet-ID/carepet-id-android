@@ -1,0 +1,10 @@
+<!-- res/drawable/wave_background.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="1080dp"
+    android:height="1000dp"
+    android:viewportWidth="1080"
+    android:viewportHeight="800">
+    <path
+        android:fillColor="#FFFF9A2F"
+        android:pathData="M0,0 H1080 V300 Q540,500 0,300 Z" />
+</vector>
