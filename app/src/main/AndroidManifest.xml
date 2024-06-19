@@ -57,9 +57,6 @@
             android:name=".dashboard.about.AboutActivity"
             android:exported="false" />
         <activity
-            android:name=".view.settings.SettingsActivity"
-            android:exported="false" />
-        <activity
             android:name=".dashboard.DashboardActivity"
             android:exported="false" />
         <activity

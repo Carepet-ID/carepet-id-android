@@ -9,11 +9,8 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.*
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.android.carepet.R
 import com.android.carepet.data.api.ApiConfig
@@ -32,7 +29,6 @@ import java.io.File
 class EditDogsActivity : AppCompatActivity() {
     private lateinit var apiService: ApiService
     private lateinit var photoUri: Uri
-    private lateinit var imagePickerLauncher: ActivityResultLauncher<Intent>
     private lateinit var imageViewSelectedPhoto: ImageView
     private var dogId: String? = null
     private lateinit var genderDropdown: Spinner
@@ -81,28 +77,10 @@ class EditDogsActivity : AppCompatActivity() {
         }
 
         buttonSelectPhoto.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    REQUEST_CODE_PERMISSIONS
-                )
-            } else {
-                openGallery()
-            }
-        }
-
-        imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data: Intent? = result.data
-                photoUri = data?.data ?: return@registerForActivityResult
-                imageViewSelectedPhoto.setImageURI(photoUri)
-                Toast.makeText(this, "Photo selected", Toast.LENGTH_SHORT).show()
-            }
+            Log.d("EditDogsActivity", "Select Photo button clicked")
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, REQUEST_IMAGE_PICK)
         }
 
         buttonAddDog.setOnClickListener {
@@ -144,9 +122,13 @@ class EditDogsActivity : AppCompatActivity() {
         }
     }
 
-    private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        imagePickerLauncher.launch(intent)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
+            photoUri = data?.data ?: return
+            imageViewSelectedPhoto.setImageURI(photoUri)
+            Toast.makeText(this, "Photo selected", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun updateDog(name: String, age: String, breed: String, skinColor: String, gender: String, birthday: String, about: String, token: String) {
@@ -214,7 +196,7 @@ class EditDogsActivity : AppCompatActivity() {
     }
 
     private suspend fun getAuthToken(): String {
-        val userPreference = UserPreference.getInstance(applicationContext)
+        val userPreference = UserPreference.getInstance(this)
         val user = userPreference.getSession().firstOrNull()
         return user?.token ?: ""
     }
@@ -229,6 +211,6 @@ class EditDogsActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val REQUEST_CODE_PERMISSIONS = 1001
+        private const val REQUEST_IMAGE_PICK = 1001
     }
 }
