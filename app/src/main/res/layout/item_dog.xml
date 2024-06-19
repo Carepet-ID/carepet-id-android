@@ -15,10 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:contentDescription="Dog Photo"
-        android:scaleType="centerCrop"
         android:adjustViewBounds="true"
-        android:maxHeight="150dp"
-        android:maxWidth="150dp"/>
+        android:maxHeight="250dp"
+        android:maxWidth="250dp"/>
 
     <TextView
         android:id="@+id/textViewDogName"

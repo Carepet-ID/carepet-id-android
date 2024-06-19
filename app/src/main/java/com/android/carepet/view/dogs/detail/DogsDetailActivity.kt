@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.android.carepet.R
 import com.android.carepet.data.api.ApiConfig
 import com.android.carepet.data.api.ApiService
@@ -45,6 +46,15 @@ class DogsDetailActivity : AppCompatActivity() {
 
         val dogId = intent.getStringExtra("dog_id")
         fetchDogDetails(dogId)
+
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
     }
 
     private fun fetchDogDetails(dogId: String?) {
