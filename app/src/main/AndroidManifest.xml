@@ -27,11 +27,10 @@
         <activity
             android:name=".view.dogs.EditDogsActivity"
             android:exported="false" />
+        <activity android:name=".view.dogs.AddDogsActivity"
+            android:exported="false"/>
         <activity
             android:name=".view.disease.detail.GetDiseaseActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.dogs.AddDogsActivity"
             android:exported="false" />
         <activity
             android:name=".view.medicine.MedicineActivity"

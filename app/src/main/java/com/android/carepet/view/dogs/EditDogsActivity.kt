@@ -1,17 +1,15 @@
 package com.android.carepet.view.dogs
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.widget.*
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.android.carepet.R
 import com.android.carepet.data.api.ApiConfig
 import com.android.carepet.data.api.ApiService
@@ -28,7 +26,8 @@ import java.io.File
 
 class EditDogsActivity : AppCompatActivity() {
     private lateinit var apiService: ApiService
-    private lateinit var photoUri: Uri
+    private var photoUri: Uri? = null
+    private lateinit var imagePickerLauncher: ActivityResultLauncher<Intent>
     private lateinit var imageViewSelectedPhoto: ImageView
     private var dogId: String? = null
     private lateinit var genderDropdown: Spinner
@@ -77,10 +76,18 @@ class EditDogsActivity : AppCompatActivity() {
         }
 
         buttonSelectPhoto.setOnClickListener {
-            Log.d("EditDogsActivity", "Select Photo button clicked")
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             startActivityForResult(intent, REQUEST_IMAGE_PICK)
+        }
+
+        imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                photoUri = data?.data
+                imageViewSelectedPhoto.setImageURI(photoUri)
+                Toast.makeText(this, "Photo selected", Toast.LENGTH_SHORT).show()
+            }
         }
 
         buttonAddDog.setOnClickListener {
@@ -124,8 +131,8 @@ class EditDogsActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
-            photoUri = data?.data ?: return
+        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK && data != null) {
+            photoUri = data.data
             imageViewSelectedPhoto.setImageURI(photoUri)
             Toast.makeText(this, "Photo selected", Toast.LENGTH_SHORT).show()
         }
@@ -134,8 +141,8 @@ class EditDogsActivity : AppCompatActivity() {
     private fun updateDog(name: String, age: String, breed: String, skinColor: String, gender: String, birthday: String, about: String, token: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val photoPart: MultipartBody.Part? = if (::photoUri.isInitialized) {
-                    val photoPath = getRealPathFromURI(photoUri)
+                val photoPart: MultipartBody.Part? = if (photoUri != null) {
+                    val photoPath = getRealPathFromURI(this@EditDogsActivity, photoUri!!)
                     val photoFile = File(photoPath)
                     val photoRequestBody = photoFile.asRequestBody("image/*".toMediaTypeOrNull())
                     MultipartBody.Part.createFormData("photo", photoFile.name, photoRequestBody)
@@ -196,21 +203,12 @@ class EditDogsActivity : AppCompatActivity() {
     }
 
     private suspend fun getAuthToken(): String {
-        val userPreference = UserPreference.getInstance(this)
+        val userPreference = UserPreference.getInstance(applicationContext)
         val user = userPreference.getSession().firstOrNull()
         return user?.token ?: ""
     }
 
-    private fun getRealPathFromURI(contentUri: Uri): String {
-        val cursor = contentResolver.query(contentUri, arrayOf(MediaStore.Images.Media.DATA), null, null, null)
-        cursor?.moveToFirst()
-        val columnIndex = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-        val path = cursor?.getString(columnIndex ?: 0) ?: ""
-        cursor?.close()
-        return path
-    }
-
     companion object {
-        private const val REQUEST_IMAGE_PICK = 1001
+        private const val REQUEST_IMAGE_PICK = 1002
     }
 }
