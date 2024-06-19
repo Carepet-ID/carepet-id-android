@@ -15,4 +15,8 @@
     <string name="empty_image_warning">Image Not Found</string>
     <string name="result_desease">Desease Result</string>
     <string name="permission_denied">Permission Denied</string>
+    <string-array name="gender_options">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
 </resources>

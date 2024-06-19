@@ -11,9 +11,11 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -44,6 +46,7 @@ class AddDogsActivity : AppCompatActivity() {
     private lateinit var photoUri: Uri
     private lateinit var imagePickerLauncher: ActivityResultLauncher<Intent>
     private lateinit var imageViewSelectedPhoto: ImageView
+    private lateinit var genderDropdown: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,20 +58,19 @@ class AddDogsActivity : AppCompatActivity() {
         val editTextDogAge: EditText = findViewById(R.id.editTextDogAge)
         val editTextDogBreed: EditText = findViewById(R.id.editTextDogBreed)
         val editTextDogSkinColor: EditText = findViewById(R.id.editTextDogSkinColor)
-        val editTextDogGender: EditText = findViewById(R.id.editTextDogGender)
         val editTextDogBirthday: EditText = findViewById(R.id.editTextDogBirthday)
         val editTextDogAbout: EditText = findViewById(R.id.editTextDogAbout)
         val buttonAddDog: Button = findViewById(R.id.buttonAddDog)
         val buttonSelectPhoto: Button = findViewById(R.id.buttonSelectPhoto)
         imageViewSelectedPhoto = findViewById(R.id.imageViewSelectedPhoto)
+        genderDropdown = findViewById(R.id.spinnerDogGender)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.statusBarColor = resources.getColor(R.color.orange)
         }
 
         val editTexts = listOf(
-            editTextDogName, editTextDogAge, editTextDogBreed, editTextDogSkinColor,
-            editTextDogGender, editTextDogBirthday, editTextDogAbout
+            editTextDogName, editTextDogAge, editTextDogBreed, editTextDogSkinColor, editTextDogBirthday, editTextDogAbout
         )
 
         editTexts.forEach { editText ->
@@ -84,6 +86,14 @@ class AddDogsActivity : AppCompatActivity() {
                 }
             })
         }
+
+        val genderAdapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.gender_options,
+            R.layout.spinner_item
+        )
+        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        genderDropdown.adapter = genderAdapter
 
         buttonSelectPhoto.setOnClickListener {
             if (ContextCompat.checkSelfPermission(
@@ -124,7 +134,7 @@ class AddDogsActivity : AppCompatActivity() {
                 val age = editTextDogAge.text.toString()
                 val breed = editTextDogBreed.text.toString()
                 val skinColor = editTextDogSkinColor.text.toString()
-                val gender = editTextDogGender.text.toString()
+                val gender = genderDropdown.selectedItem.toString()
                 val birthday = editTextDogBirthday.text.toString()
                 val about = editTextDogAbout.text.toString()
 

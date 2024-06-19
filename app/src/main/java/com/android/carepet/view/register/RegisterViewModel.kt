@@ -31,7 +31,13 @@ class RegisterViewModel(private val repository: UserRepository) : ViewModel() {
                     val response = repository.registerUser(username, email, password)
                     _registerResult.value = Result.Success(response)
                 } catch (e: Exception) {
-                    _registerResult.value = Result.Error(e.message)
+                    if (e.message == "username already exists") {
+                        _usernameError.value = "Username already exists"
+                    } else if (e.message == "email already exists") {
+                        _emailError.value = "Email already exists"
+                    } else {
+                        _registerResult.value = Result.Error(e.message)
+                    }
                 }
             }
         }

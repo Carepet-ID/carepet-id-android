@@ -9,6 +9,12 @@ data class LoginResponse(
 	@field:SerializedName("response")
 	val response: List<Any>? = emptyList(),
 
+	@SerializedName("error")
+	val error: Boolean? = null,
+
+	@SerializedName("message")
+	val message: String? = null,
+
 	@field:SerializedName("name")
 	val name: String?
 )

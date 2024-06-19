@@ -35,6 +35,7 @@ class EditDogsActivity : AppCompatActivity() {
     private lateinit var imagePickerLauncher: ActivityResultLauncher<Intent>
     private lateinit var imageViewSelectedPhoto: ImageView
     private var dogId: String? = null
+    private lateinit var genderDropdown: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,12 +47,12 @@ class EditDogsActivity : AppCompatActivity() {
         val editTextDogAge: EditText = findViewById(R.id.editTextDogAge)
         val editTextDogBreed: EditText = findViewById(R.id.editTextDogBreed)
         val editTextDogSkinColor: EditText = findViewById(R.id.editTextDogSkinColor)
-        val editTextDogGender: EditText = findViewById(R.id.editTextDogGender)
         val editTextDogBirthday: EditText = findViewById(R.id.editTextDogBirthday)
         val editTextDogAbout: EditText = findViewById(R.id.editTextDogAbout)
         val buttonAddDog: Button = findViewById(R.id.buttonAddDog)
         val buttonSelectPhoto: Button = findViewById(R.id.buttonSelectPhoto)
         imageViewSelectedPhoto = findViewById(R.id.imageViewSelectedPhoto)
+        genderDropdown = findViewById(R.id.spinnerDogGender)
 
         // Get dog data from intent
         val dog: DogResponse? = intent.getParcelableExtra("dog")
@@ -61,13 +62,23 @@ class EditDogsActivity : AppCompatActivity() {
             editTextDogAge.setText(it.age.toString())
             editTextDogBreed.setText(it.breed)
             editTextDogSkinColor.setText(it.skinColor)
-            editTextDogGender.setText(it.gender)
             editTextDogBirthday.setText(it.birthday)
             editTextDogAbout.setText(it.about)
             Glide.with(this).load(it.photo).into(imageViewSelectedPhoto)
         }
 
         buttonAddDog.text = "Update Dog"
+
+        val genderAdapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.gender_options,
+            R.layout.spinner_item
+        )
+        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        genderDropdown.adapter = genderAdapter
+        dog?.let {
+            genderDropdown.setSelection(genderAdapter.getPosition(it.gender))
+        }
 
         buttonSelectPhoto.setOnClickListener {
             if (ContextCompat.checkSelfPermission(
@@ -97,8 +108,7 @@ class EditDogsActivity : AppCompatActivity() {
         buttonAddDog.setOnClickListener {
             var allFieldsValid = true
             val editTexts = listOf(
-                editTextDogName, editTextDogAge, editTextDogBreed, editTextDogSkinColor,
-                editTextDogGender, editTextDogBirthday, editTextDogAbout
+                editTextDogName, editTextDogAge, editTextDogBreed, editTextDogSkinColor, editTextDogBirthday, editTextDogAbout
             )
             editTexts.forEach { editText ->
                 if (editText.text.isNullOrEmpty()) {
@@ -112,7 +122,7 @@ class EditDogsActivity : AppCompatActivity() {
                 val age = editTextDogAge.text.toString()
                 val breed = editTextDogBreed.text.toString()
                 val skinColor = editTextDogSkinColor.text.toString()
-                val gender = editTextDogGender.text.toString()
+                val gender = genderDropdown.selectedItem.toString()
                 val birthday = editTextDogBirthday.text.toString()
                 val about = editTextDogAbout.text.toString()
 
@@ -158,6 +168,7 @@ class EditDogsActivity : AppCompatActivity() {
                 val namePart = name.toRequestBody("text/plain".toMediaTypeOrNull())
                 val agePart = age.toRequestBody("text/plain".toMediaTypeOrNull())
                 val breedPart = breed.toRequestBody("text/plain".toMediaTypeOrNull())
+                val skinColorPart = skinColor.toRequestBody("text/plain".toMediaTypeOrNull())
                 val genderPart = gender.toRequestBody("text/plain".toMediaTypeOrNull())
                 val birthdayPart = birthday.toRequestBody("text/plain".toMediaTypeOrNull())
                 val aboutPart = about.toRequestBody("text/plain".toMediaTypeOrNull())
@@ -170,6 +181,7 @@ class EditDogsActivity : AppCompatActivity() {
                     birthdayPart,
                     agePart,
                     breedPart,
+                    skinColorPart,
                     aboutPart,
                     photoPart
                 )
@@ -177,7 +189,7 @@ class EditDogsActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         showSuccessDialog()
-                        setResult(Activity.RESULT_OK) // Notify DogsFragment of the update
+                        setResult(Activity.RESULT_OK)
                     } else {
                         Toast.makeText(this@EditDogsActivity, "Failed to update dog", Toast.LENGTH_SHORT).show()
                     }
@@ -196,7 +208,7 @@ class EditDogsActivity : AppCompatActivity() {
             .setMessage("Update Dog Success")
             .setPositiveButton("Confirm") { dialog, _ ->
                 dialog.dismiss()
-                finish() // Close the activity
+                finish()
             }
             .show()
     }

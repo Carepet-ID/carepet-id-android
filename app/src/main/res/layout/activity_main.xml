@@ -4,17 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".view.main.MainActivity">
+
+    <ImageView
+        android:id="@+id/ivBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/dog" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/easily"
+        android:background="@drawable/carepet" />
+
+    <ImageView
+        android:id="@+id/easily"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="90dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnLetStart"
+        android:background="@drawable/monitorhealth"/>
 
     <Button
         android:id="@+id/btnLetStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Let's Get Started"
+        android:layout_marginTop="90dp"
+        android:backgroundTint="@color/orange"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/wht"
+        android:layout_marginTop="150dp"
+        android:gravity="center"
+        android:alpha="0.95"
+        app:layout_constraintTop_toBottomOf="@+id/btnLetStart"
+        android:text="Care Pet is an application\ndesigned to help you care\nfor your pets easily and\ncomfortably."/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

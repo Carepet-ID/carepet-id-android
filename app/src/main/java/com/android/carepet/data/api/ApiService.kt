@@ -30,7 +30,7 @@ interface ApiService {
         @Part("email") email: RequestBody,
         @Part("password") password: RequestBody,
         @Part("role") role: RequestBody
-    ): SignupResponse
+    ): Response<SignupResponse>
 
     @POST("logout")
     suspend fun logout(@Header("Authorization") token: String?): LogoutResponse
@@ -99,6 +99,7 @@ interface ApiService {
         @Part("birthday") birthday: RequestBody?,
         @Part("age") age: RequestBody?,
         @Part("breed") breed: RequestBody?,
+        @Part("skinColor") skinColor: RequestBody,
         @Part("about") about: RequestBody?,
         @Part photo: MultipartBody.Part?
     ): Response<DogResponse>

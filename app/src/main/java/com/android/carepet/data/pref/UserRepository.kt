@@ -1,6 +1,5 @@
 package com.android.carepet.data.pref
 
-import android.content.Context
 import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -12,7 +11,6 @@ import androidx.lifecycle.MutableLiveData
 import com.android.carepet.data.api.ApiService
 import com.android.carepet.data.response.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -44,6 +42,14 @@ class UserRepository private constructor(
         val rawResponseBody = rawResponse.body()?.string()
 
         val response = apiService.login(usernamePart, passwordPart)
+
+        if (response.error == true) {
+            if (response.message == "Invalid credentials") {
+                throw Exception("Data Account Not valid")
+            } else {
+                throw Exception(response.message ?: "An unknown error occurred")
+            }
+        }
 
         val cookies = rawResponse.headers().get("Set-Cookie")
 
@@ -81,7 +87,18 @@ class UserRepository private constructor(
         val passwordPart = password.toRequestBody("text/plain".toMediaTypeOrNull())
         val rolePart = (role ?: "user").toRequestBody("text/plain".toMediaTypeOrNull())
 
-        return apiService.register(usernamePart, emailPart, passwordPart, rolePart)
+        val response = apiService.register(usernamePart, emailPart, passwordPart, rolePart)
+
+        if (!response.isSuccessful) {
+            val errorBody = response.errorBody()?.string()
+            when {
+                errorBody?.contains("username already exists") == true -> throw Exception("username already exists")
+                errorBody?.contains("email already exists") == true -> throw Exception("email already exists")
+                else -> throw Exception(errorBody ?: "An unknown error occurred")
+            }
+        }
+
+        return response.body()!!
     }
 
     suspend fun saveSession(user: UserModel) {

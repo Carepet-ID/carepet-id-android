@@ -77,7 +77,11 @@ class LoginActivity : AppCompatActivity() {
                 is Result.Error -> {
                     progressBar.visibility = View.GONE
                     Log.e("LoginActivity", "Login failed: ${result.error}")
-                    Toast.makeText(this, "Login failed: ${result.error}", Toast.LENGTH_SHORT).show()
+                    if (result.error == "Data Account Not valid") {
+                        Toast.makeText(this, "Data Account Not valid", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Login failed: ${result.error}", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         })

@@ -36,15 +36,17 @@ class LoginViewModel(private val repository: UserRepository) : ViewModel() {
                 _loginResult.value = Result.Loading
                 try {
                     val response = repository.loginUser(username, password)
-                    // Token is now handled within the UserRepository and saved in UserModel
-
-                    val user = repository.getSession().first() // Get the saved session
+                    val user = repository.getSession().first()
                     _loginResult.value = Result.Success(user)
                     _sessionSaved.value = true
 
                     Log.d("LoginViewModel", "Token after login: ${user.token}")
                 } catch (e: Exception) {
-                    _loginResult.value = Result.Error(e.message ?: "An unknown error occurred")
+                    if (e.message == "Data Account Not valid") {
+                        _loginResult.value = Result.Error("Data Account Not valid")
+                    } else {
+                        _loginResult.value = Result.Error(e.message ?: "An unknown error occurred")
+                    }
                 }
             }
         }
