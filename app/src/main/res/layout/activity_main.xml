@@ -16,14 +16,15 @@
         android:src="@drawable/dog" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="45dp"
         android:scaleType="centerCrop"
+        android:layout_marginLeft="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/easily"
-        android:background="@drawable/carepet" />
+        android:background="@drawable/frame_logo" />
 
     <ImageView
         android:id="@+id/easily"
