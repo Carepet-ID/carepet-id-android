@@ -11,7 +11,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorSecondary"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:title="Disease"
+        app:title="Detail Dogs"
         app:navigationIcon="@drawable/ic_back_arrow" />
 
     <ImageView

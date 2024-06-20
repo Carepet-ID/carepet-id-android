@@ -13,7 +13,7 @@
         android:background="?attr/colorSecondary"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Disease"
+        app:title="Medicine"
         app:navigationIcon="@drawable/ic_back_arrow" />
 
     <androidx.recyclerview.widget.RecyclerView
