@@ -2,6 +2,9 @@ package com.android.carepet.view.dogs
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentResolver
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
@@ -40,6 +43,8 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 
 class AddDogsActivity : AppCompatActivity() {
     private lateinit var apiService: ApiService
@@ -96,9 +101,13 @@ class AddDogsActivity : AppCompatActivity() {
         genderDropdown.adapter = genderAdapter
 
         buttonSelectPhoto.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, REQUEST_IMAGE_PICK)
+            if (Build.VERSION.SDK_INT >= 34) { // Android 14 or higher
+                pickImageFromGallery()
+            } else if (isStoragePermissionGranted()) {
+                pickImageFromGallery()
+            } else {
+                requestStoragePermission()
+            }
         }
 
         imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -144,20 +153,62 @@ class AddDogsActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK && data != null) {
-            photoUri = data.data
-            imageViewSelectedPhoto.setImageURI(photoUri)
-            Toast.makeText(this, "Photo selected", Toast.LENGTH_SHORT).show()
+    private fun isStoragePermissionGranted(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
         }
+    }
+
+    private fun requestStoragePermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            AlertDialog.Builder(this)
+                .setTitle("Permission required")
+                .setMessage("This permission is needed to select a photo from your device")
+                .setPositiveButton("OK") { _, _ ->
+                    ActivityCompat.requestPermissions(
+                        this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_CODE_PERMISSIONS
+                    )
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        } else {
+            ActivityCompat.requestPermissions(
+                this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_CODE_PERMISSIONS
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CODE_PERMISSIONS) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                pickImageFromGallery()
+            } else {
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    AlertDialog.Builder(this)
+                        .setTitle("Permission required")
+                        .setMessage("This permission is needed to select a photo from your device. Please go to settings and enable the permission.")
+                        .setPositiveButton("OK", null)
+                        .show()
+                } else {
+                    Toast.makeText(this, "Storage permission is required to select a photo", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun pickImageFromGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        imagePickerLauncher.launch(intent)
     }
 
     private fun addDog(name: String, age: String, breed: String, skinColor: String, gender: String, birthday: String, about: String, photoUri: Uri, token: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val photoPath = getRealPathFromURI(photoUri)
-                val photoFile = File(photoPath)
+                val photoFile = createFileFromUri(this@AddDogsActivity, photoUri)
                 val photoRequestBody = photoFile.asRequestBody("image/*".toMediaTypeOrNull())
                 val photoPart = MultipartBody.Part.createFormData("photo", photoFile.name, photoRequestBody)
 
@@ -194,6 +245,17 @@ class AddDogsActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun createFileFromUri(context: Context, uri: Uri): File {
+        val contentResolver: ContentResolver = context.contentResolver
+        val inputStream: InputStream? = contentResolver.openInputStream(uri)
+        val tempFile = File.createTempFile("upload", ".tmp", context.cacheDir)
+        FileOutputStream(tempFile).use { output ->
+            inputStream?.copyTo(output)
+        }
+        inputStream?.close()
+        return tempFile
     }
 
     private fun showSuccessDialog() {
