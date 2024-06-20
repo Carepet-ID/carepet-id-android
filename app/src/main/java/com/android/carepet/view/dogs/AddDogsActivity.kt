@@ -101,13 +101,7 @@ class AddDogsActivity : AppCompatActivity() {
         genderDropdown.adapter = genderAdapter
 
         buttonSelectPhoto.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= 34) { // Android 14 or higher
-                pickImageFromGallery()
-            } else if (isStoragePermissionGranted()) {
-                pickImageFromGallery()
-            } else {
-                requestStoragePermission()
-            }
+            pickImageFromGallery()
         }
 
         imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -280,19 +274,6 @@ class AddDogsActivity : AppCompatActivity() {
         val userPreference = UserPreference.getInstance(applicationContext)
         val user = userPreference.getSession().firstOrNull()
         return user?.token ?: ""
-    }
-
-    private fun getRealPathFromURI(contentUri: Uri): String {
-        var cursor: Cursor? = null
-        return try {
-            val proj = arrayOf(MediaStore.Images.Media.DATA)
-            cursor = contentResolver.query(contentUri, proj, null, null, null)
-            val columnIndex = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            cursor?.moveToFirst()
-            cursor?.getString(columnIndex ?: 0) ?: ""
-        } finally {
-            cursor?.close()
-        }
     }
 
     companion object {

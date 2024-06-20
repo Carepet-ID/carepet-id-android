@@ -1,6 +1,8 @@
 package com.android.carepet.view.dogs
 
 import android.app.Activity
+import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -23,6 +25,8 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 
 class EditDogsActivity : AppCompatActivity() {
     private lateinit var apiService: ApiService
@@ -76,9 +80,7 @@ class EditDogsActivity : AppCompatActivity() {
         }
 
         buttonSelectPhoto.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, REQUEST_IMAGE_PICK)
+            pickImageFromGallery()
         }
 
         imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -129,21 +131,17 @@ class EditDogsActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK && data != null) {
-            photoUri = data.data
-            imageViewSelectedPhoto.setImageURI(photoUri)
-            Toast.makeText(this, "Photo selected", Toast.LENGTH_SHORT).show()
-        }
+    private fun pickImageFromGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        imagePickerLauncher.launch(intent)
     }
 
     private fun updateDog(name: String, age: String, breed: String, skinColor: String, gender: String, birthday: String, about: String, token: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val photoPart: MultipartBody.Part? = if (photoUri != null) {
-                    val photoPath = getRealPathFromURI(this@EditDogsActivity, photoUri!!)
-                    val photoFile = File(photoPath)
+                    val photoFile = createFileFromUri(this@EditDogsActivity, photoUri!!)
                     val photoRequestBody = photoFile.asRequestBody("image/*".toMediaTypeOrNull())
                     MultipartBody.Part.createFormData("photo", photoFile.name, photoRequestBody)
                 } else {
@@ -189,6 +187,17 @@ class EditDogsActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun createFileFromUri(context: Context, uri: Uri): File {
+        val contentResolver: ContentResolver = context.contentResolver
+        val inputStream: InputStream? = contentResolver.openInputStream(uri)
+        val tempFile = File.createTempFile("upload", ".tmp", context.cacheDir)
+        FileOutputStream(tempFile).use { output ->
+            inputStream?.copyTo(output)
+        }
+        inputStream?.close()
+        return tempFile
     }
 
     private fun showSuccessDialog() {
