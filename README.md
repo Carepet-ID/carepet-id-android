@@ -6,9 +6,7 @@
 <h1 align="center" id="title">Carepet ID</h1>
 
 ## Introduction
-Traverse ID is a mobile application designed with the aim of increasing visibility and awareness of Indonesia's tourism potential and empower stakeholders in the industry to better promote their offerings through tourism campaigns.
-
-The app can also provide a personalized tourism recommendation system, allowing travelers to tailor their itineraries based on their preferences and interests. A forum feature can be included that would allow travelers to connect with each other and share their experiences. Lastly, sentiment analysis can provide feedback on tourist attraction, allowing travelers to make informed decisions.
+Carepet is a mobile health application used for animal lovers, especially dogs. This carepet application functions to detect dog skin diseases and we also provide medicine recommendations for dog users, not only that, we provide articles regarding the specifications of the dog you have. 
 
 ## Features
 -**Landing Page**
@@ -54,8 +52,59 @@ The app can also provide a personalized tourism recommendation system, allowing 
   - Buy products from other applications online stores
 
 ## Installation
-1. To install the application, clone the repository using the following command:
+1. To install the application, clone the repository using the following command: 
+```
 git clone https://github.com/Carepet-ID/carepet-id-android.git
+```
 
-## App Architecture
+## Project Structure
+```
+app
+├── manifests
+│   └── AndroidManifest.xml
+├── kotlin+java
+│   └── com.android.carepet
+│       ├── dashboard
+│       │   ├── about
+│       │   ├── adapter
+│       │   ├── bookmark
+│       │   ├── fragment
+│       │   └── viewmodel
+│       ├── data
+│       │   ├── api
+│       │   ├── di
+│       │   ├── pref
+│       │   ├── repository
+│       │   ├── response
+│       │   └── utils
+│       ├── view
+│       │   ├── article
+│       │   ├── detail
+│       │   ├── disease
+│       │   ├── dogs
+│       │   │   ├── detail
+│       │   ├── login
+│       │   ├── main
+│       │   ├── medicine
+│       │   └── register
+├── com.android.carepet (androidTest)
+├── com.android.carepet (test)
+├── res
+│   ├── anim
+│   ├── drawable
+│   ├── font
+│   ├── layout
+│   ├── menu
+│   ├── mipmap
+│   ├── values
+│   └── xml
+└── java (generated)
+```
 
+## Credits
+**[Kotlin]((https://kotlinlang.org/))**
+**[Retrofit](https://square.github.io/retrofit/)**
+**[Android Studio](https://developer.android.com/studio)**
+**[Datastore](https://cloud.google.com/datastore)**
+
+##Screenshots
