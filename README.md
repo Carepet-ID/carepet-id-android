@@ -114,20 +114,28 @@ app
 ## Screenshots
 
 ### Landing Page
-![Landing Page](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/Screenshot%202024-06-21%20133119.png?raw=true)
+<div align="left"> 
+<img src="https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/Screenshot%202024-06-21%20133119.png?raw=true" width="200">
+</div>
 
 ### Login and Register Page
-![Login Page](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/Screenshot%202024-06-21%20133136.png?raw=true)
-![Login Page](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/Screenshot%202024-06-21%20133136.png?raw=true)
+<div align="left"> 
+<img src="https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/Screenshot%202024-06-21%20133136.png?raw=true" width="200">
+<img src="https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/Screenshot%202024-06-21%20133136.png?raw=true" width="200">
+</div>
 
 ### Dashboard Page
-![Dashboard Page](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/dashboardpage/Screenshot%202024-06-21%20133608.png?raw=true)
-![Disease Feature Detection](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/dashboardpage/Screenshot%202024-06-21%20133623.png?raw=true)
-![Article Page](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/dashboardpage/Screenshot%202024-06-21%20133628.png?raw=true)
-![Dogs Page](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/dashboardpage/Screenshot%202024-06-21%20133632.png?raw=true)
+<div align="left"> 
+<img src="https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/dashboardpage/Screenshot%202024-06-21%20133608.png?raw=true" width="200">
+<img src="https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/dashboardpage/Screenshot%202024-06-21%20133623.png?raw=true" width="200">
+<img src="https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/dashboardpage/Screenshot%202024-06-21%20133628.png?raw=true" width="200">
+<img src="https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/dashboardpage/Screenshot%202024-06-21%20133632.png?raw=true" width="200">
+</div>
 
 ### Detail Page
-![Detail Disease Scan](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/detail/Screenshot%202024-06-21%20135505.png?raw=true)
+<div align="left"> 
+<img src="https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/detail/Screenshot%202024-06-21%20135505.png?raw=true" width="200">
+</div>
 
 ## Contact
 - **[Github](https://github.com/zhulfani)**
