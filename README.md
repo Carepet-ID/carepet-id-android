@@ -55,7 +55,7 @@ The app can also provide a personalized tourism recommendation system, allowing 
 
 ## Installation
 1. To install the application, clone the repository using the following command:
-```git clone https://github.com/Carepet-ID/carepet-id-android.git```
+git clone https://github.com/Carepet-ID/carepet-id-android.git
 
 ## App Architecture
 
