@@ -130,3 +130,8 @@ app
 ![Medicine Page](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/dashboardpage/Screenshot%202024-06-21%20134217.png?raw=true)
 
 ### Detail Page
+![Detail Bookmark](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/detail/Screenshot%202024-06-21%20134757.png?raw=true)
+![Detail About Us](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/detail/Screenshot%202024-06-21%20134834.png?raw=true)
+![Detail Article](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/detail/Screenshot%202024-06-21%20134843.png?raw=true)
+![Detail Disease](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/detail/Screenshot%202024-06-21%20134852.png?raw=true)
+![Detail Dogs](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/detail/Screenshot%202024-06-21%20134904.png?raw=true)
