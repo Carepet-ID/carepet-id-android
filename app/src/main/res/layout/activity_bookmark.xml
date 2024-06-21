@@ -16,7 +16,7 @@
             android:background="?attr/colorSecondary"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="Detail Disease"
+            app:title="Bookmark"
             app:navigationIcon="@drawable/ic_back_arrow" />
 
         <FrameLayout
