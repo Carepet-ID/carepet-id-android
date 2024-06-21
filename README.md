@@ -102,9 +102,12 @@ app
 ```
 
 ## Credits
-**[Kotlin]((https://kotlinlang.org/))**
-**[Retrofit](https://square.github.io/retrofit/)**
-**[Android Studio](https://developer.android.com/studio)**
-**[Datastore](https://cloud.google.com/datastore)**
+-**[Kotlin](https://kotlinlang.org/)**
+
+-**[Retrofit](https://square.github.io/retrofit/)**
+
+-**[Android Studio](https://developer.android.com/studio)**
+
+-**[Datastore](https://cloud.google.com/datastore)**
 
 ##Screenshots
