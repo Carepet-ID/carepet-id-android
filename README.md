@@ -112,3 +112,21 @@ app
 
 
 ## Screenshots
+
+### Landing Page
+![Landing Page](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/Screenshot%202024-06-21%20133119.png?raw=true)
+
+### Login and Register Page
+![Login Page](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/Screenshot%202024-06-21%20133136.png?raw=true)
+![Login Page](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/Screenshot%202024-06-21%20133136.png?raw=true)
+
+### Dashboard Page
+![Dashboard Page](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/dashboardpage/Screenshot%202024-06-21%20133608.png?raw=true)
+![Disease Feature Detection](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/dashboardpage/Screenshot%202024-06-21%20133623.png?raw=true)
+![Article Page](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/dashboardpage/Screenshot%202024-06-21%20133628.png?raw=true)
+![Dogs Page](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/dashboardpage/Screenshot%202024-06-21%20133632.png?raw=true)
+![Account Page](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/dashboardpage/Screenshot%202024-06-21%20133636.png?raw=true)
+![Disease Page](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/dashboardpage/Screenshot%202024-06-21%20134212.png?raw=true)
+![Medicine Page](https://github.com/Carepet-ID/carepet-id-android/blob/master/assets/dashboardpage/Screenshot%202024-06-21%20134217.png?raw=true)
+
+### Detail Page
